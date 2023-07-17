@@ -1,0 +1,29 @@
+import requests
+from bs4 import BeautifulSoup
+
+# define the URL
+url = "https://www.unjobnet.org/jobs?orgtypes%5B0%5D=United+Nations+System&apptypes%5B0%5D=Internship&keywords=&orderby=closing"
+
+# send a GET request to the URL
+response = requests.get(url)
+
+# create a BeautifulSoup object to parse the HTML content
+soup = BeautifulSoup(response.content, "html.parser")
+
+# find all job postings
+job_postings = soup.find_all("div", class_="job-list")
+
+# loop through the job postings
+for job in job_postings:
+    # get the job information
+    job_title = job.find("a", class_="py-2 h6 fw-bold").text.strip()
+    organization = job.find("a", class_="link-dark").text.strip()
+    deadline = job.find("span", class_="text-danger font-weight-bold").text.strip()
+    job_link = "https://www.unjobnet.org" + job.find("a", class_="py-2 h6 fw-bold")["href"]
+
+    # print the job information
+    print("Job Title:", job_title)
+    print("Organization:", organization)
+    print("Deadline:", deadline)
+    print("Job Link:", job_link)
+    print("--------------------")
